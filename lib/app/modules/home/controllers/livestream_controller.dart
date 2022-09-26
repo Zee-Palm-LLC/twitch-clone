@@ -1,11 +1,14 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:twitch/app/modules/home/controllers/auth_controller.dart';
 import 'package:twitch/app/modules/home/controllers/user_controller.dart';
 import 'package:twitch/app/modules/home/models/comments.dart';
 import 'package:twitch/app/modules/home/models/livestream_model.dart';
+import 'package:twitch/app/modules/home/models/user_model.dart';
 import 'package:twitch/app/modules/home/views/broad_cast_screen.dart';
 import 'package:twitch/app/modules/home/widgets/loading_dialog.dart';
 import 'package:twitch/app/services/db_services.dart';
@@ -15,36 +18,38 @@ import 'package:uuid/uuid.dart';
 class LiveStreamController extends GetxController {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   DatabaseServices db = DatabaseServices();
-  final user = Get.find<UserController>().user;
+  UserController uc = Get.find<UserController>();
 
   Future<String> startLiveStream(
       {required String title, required File? image}) async {
     showLoadingDialog(message: 'Starting LiveStream');
 
-    DocumentSnapshot snap =
-        await db.liveStreamCollection.doc('${user.uid}${user.username}').get();
+    DocumentSnapshot snap = await db.liveStreamCollection
+        .doc('${uc.user.uid}${uc.user.username}')
+        .get();
     String channelId = '';
     try {
       if (!((await db.liveStreamCollection
-              .doc('${user.uid}${user.username}')
+              .doc('${uc.user.uid}${uc.user.username}')
               .get())
           .exists)) {
         String thumbnailUrl = await FirebaseStorageServices.uploadToStorage(
           folderName: 'livestream-thumbnails',
           file: image!,
-          uid: user.uid!,
+          uid: uc.user.uid!,
         );
-        channelId = '${user.uid}${user.username}';
+        channelId = '${uc.user.uid}${uc.user.username}';
+        log(uc.user.username!);
         LiveStream liveStream = LiveStream(
           title: title,
           image: thumbnailUrl,
-          uid: user.uid!,
-          username: user.username!,
+          uid: uc.user.uid!,
+          username: uc.user.username!,
           viewers: 0,
           channelId: channelId,
           startedAt: DateTime.now(),
         );
-        print(user.username);
+        log(uc.user.username!);
         db.liveStreamCollection.doc(channelId).set(liveStream.toMap());
         hideLoadingDialog();
       } else {
@@ -99,8 +104,8 @@ class LiveStreamController extends GetxController {
           commentId: commentId,
           createdAt: DateTime.now(),
           message: text,
-          ownerId: user.uid,
-          username: user.username);
+          ownerId: uc.user.uid,
+          username: uc.user.username);
       await db.liveStreamCollection
           .doc(id)
           .collection('comments')

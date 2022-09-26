@@ -18,6 +18,8 @@ dependencies:
   image_picker: ^0.8.5+3
   agora_rtc_engine: ^5.3.0
   permission_handler: ^10.0.1
+  timeago: ^3.3.0
+  http: ^0.13.5
   uuid: ^3.0.6
   flutter: 
     sdk: flutter

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:twitch/app/modules/home/controllers/auth_controller.dart';
 import 'package:twitch/app/modules/home/controllers/user_controller.dart';
 import 'package:twitch/app/modules/home/views/go_live_screen.dart';
+import 'package:twitch/app/modules/home/views/profile_infor.dart';
 
 import '../../../data/constants/constants.dart';
+import 'feed_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = '/home';
@@ -16,15 +19,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _page = 0;
   List<Widget> pages = [
-    Center(
-        child: Text(
-      Get.find<UserController>().user.username.toString(),
-      style: TextStyle(color: Colors.white),
-    )),
+    const FeedScreen(),
     const GoLiveScreen(),
-    const Center(
-      child: Text('Browser'),
-    ),
+    ProfileInfo()
   ];
 
   onPageChange(int page) {

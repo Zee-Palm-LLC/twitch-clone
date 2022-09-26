@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -15,6 +16,7 @@ import 'package:twitch/app/modules/home/widgets/chat.dart';
 import 'package:twitch/config/appId.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:http/http.dart' as http;
 
 class BroadCastScreen extends StatefulWidget {
   bool isBroadCaster;
@@ -51,6 +53,30 @@ class _BroadCastScreenState extends State<BroadCastScreen> {
     _joinChannel();
   }
 
+  String baseUrl = 'https://twitch-tutorial.herokuapp.com/';
+  String? token;
+
+  Future<void> getToken() async {
+    final res = await http.get(
+      // ignore: prefer_interpolation_to_compose_strings
+      Uri.parse(baseUrl +
+          '/rtc/' +
+          widget.channelId +
+          '/publisher/userAccount/' +
+          user.uid! +
+          '/'),
+    );
+
+    if (res.statusCode == 200) {
+      setState(() {
+        token = res.body;
+        token = jsonDecode(token!)['rtcToken'];
+      });
+    } else {
+      debugPrint('Failed to fetch the token');
+    }
+  }
+
   void _addListener() {
     _engine.setEventHandler(
         RtcEngineEventHandler(joinChannelSuccess: ((channel, uid, elapsed) {
@@ -68,15 +94,19 @@ class _BroadCastScreenState extends State<BroadCastScreen> {
       setState(() {
         remoteUid.clear();
       });
+    }, tokenPrivilegeWillExpire: (token) async {
+      await getToken();
+      await _engine.renewToken(token);
     }));
   }
 
   _joinChannel() async {
+    await getToken();
     if (defaultTargetPlatform == TargetPlatform.android) {
       await [Permission.camera, Permission.microphone].request();
     }
     await _engine.joinChannelWithUserAccount(
-        tempToken, 'testing123', Get.find<UserController>().user.uid!);
+        token, 'testing123', Get.find<UserController>().user.uid!);
   }
 
   _leaveChannel() async {

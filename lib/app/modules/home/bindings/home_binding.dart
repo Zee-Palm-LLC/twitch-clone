@@ -9,6 +9,7 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
     Get.lazyPut<UserController>(() => UserController(), fenix: true);
-    Get.lazyPut<LiveStreamController>(() => LiveStreamController());
+    Get.lazyPut<LiveStreamController>(() => LiveStreamController(),
+        fenix: true);
   }
 }

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:twitch/app/modules/home/controllers/user_controller.dart';
 import 'package:twitch/app/modules/home/models/user_model.dart';
+import 'package:twitch/app/modules/home/views/auth/auth_wrapper.dart';
 import 'package:twitch/app/modules/home/widgets/loading_dialog.dart';
 import 'package:twitch/app/services/db_services.dart';
 
@@ -21,11 +23,12 @@ class AuthController extends GetxController {
 
   Future<void> signInWithEmailAndPassword(
       {required String email, required String password}) async {
-    showLoadingDialog(message: 'Signin ....');
+    showLoadingDialog(message: 'Signing In ....');
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       hideLoadingDialog();
+      Get.to(() => HomeScreen());
     } on FirebaseAuthException catch (error) {
       hideLoadingDialog();
       Get.snackbar('Login Failed', error.message!,
@@ -54,6 +57,8 @@ class AuthController extends GetxController {
         await _createUserFirestore(newUser, result.user!);
       });
       hideLoadingDialog();
+
+      Get.to(() => HomeScreen());
     } on FirebaseAuthException catch (error) {
       hideLoadingDialog();
       Get.snackbar('Sign up Failed', error.message.toString(),
@@ -70,6 +75,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> signOut() async {
-    return await _auth.signOut();
+    await _auth.signOut();
+    Get.delete<UserController>().then((value) => Get.to(() => AuthWrapper()));
   }
 }
