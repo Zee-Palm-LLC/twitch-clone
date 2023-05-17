@@ -40,7 +40,7 @@ class _GoLiveScreenState extends State<GoLiveScreen> {
     UserModel user = Get.find<UserController>().user;
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.username!),
+        title: Text(user.username??''),
       ),
       body: SafeArea(
         child: Responsive(

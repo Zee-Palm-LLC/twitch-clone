@@ -194,7 +194,9 @@ class _BroadCastScreenState extends State<BroadCastScreen> {
                           uid: remoteUid[0],
                           channelId: widget.channelId,
                         )
-                  : Container(),
+                  : Container(
+                    color: Colors.red,
+                  ),
     );
   }
 }
