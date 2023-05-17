@@ -1,16 +1,11 @@
-# twitch
+# Zee Palm UI Code
 
-A new Flutter project.
+Twitch App Clone done with Flutter 3.7.0
 
-## Getting Started
+## Details
 
-This project is a starting point for a Flutter application.
+This project includes Twitch App Clone with multiple screens.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src="https://github.com/zeepalm-training-grounds/twitch-clone/assets/128903428/3ea1f0ba-7825-4ebd-a248-db1ffa609edf" width="200" height="400" />
+<img src="https://github.com/zeepalm-training-grounds/twitch-clone/assets/128903428/d2ff072c-f6a0-4adb-af36-6a3d7cac3d7e" width="200" height="400" />
+<img src="https://github.com/zeepalm-training-grounds/twitch-clone/assets/128903428/00d687ae-a781-4bf7-b317-804e4619f252" width="200" height="400" />
